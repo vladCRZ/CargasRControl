@@ -80,10 +80,13 @@ public class CargaRM {
             voRemedyControl.setVoErrores(new ArrayList<String>());
             voCarga.ExcCommand("rm " + prop.getProperty("PATH"));
             if (voRemedyControl.fncDescargarArchivo(ordenTrabajoVO.getViIDRequerimiento())) {
+                //Se recupera el nombre del archivo en remedy
+                vsNomArchivo = voRemedyControl.fncRecuperarNombreArchivo(ordenTrabajoVO.getViIDRequerimiento());
+                System.out.println( "Aqui esta tu archivo: " + prop.getProperty("PATH") + vsNomArchivo);
                 //System.out.println("paso por aqui");
-                voListRutina = VO__LECTURA.fncLeerArchivo(prop.getProperty("PATH"));
+                voListRutina = VO__LECTURA.fncLeerArchivo(prop.getProperty("PATH") + vsNomArchivo);
                 if (voRemedyControl.fncInsertRutinas(voListRutina, ordenTrabajoVO.getViIDOrden())) {
-                    vsNomArchivo = voCarga.fncObtenerNomArchivo(voListRutina);
+                    //vsNomArchivo = voCarga.fncObtenerNomArchivo(voListRutina);
                     if (!voRemedyControl.getVoErrores().isEmpty()) {
                         for (String errores : voRemedyControl.getVoErrores()) {
                             System.out.println(errores);
