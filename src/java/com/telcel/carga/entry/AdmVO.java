@@ -138,7 +138,22 @@ public class AdmVO {
     public void setVsMensajeMail(String vsMensajeMail) {
         this.vsMensajeMail = vsMensajeMail;
     }
-    
-    
-    
+
+    @Override
+    public String toString() {
+        return "AdmVO{" +
+                "vsCompania='" + vsCompania + '\'' +
+                ", vsSistema='" + vsSistema + '\'' +
+                ", vsNodo='" + vsNodo + '\'' +
+                ", vsRegion='" + vsRegion + '\'' +
+                ", vsPerfil='" + vsPerfil + '\'' +
+                ", vsPrimerAName='" + vsPrimerAName + '\'' +
+                ", vsPrimerANum='" + vsPrimerANum + '\'' +
+                ", vsSegundoAName='" + vsSegundoAName + '\'' +
+                ", vsSegundoANum='" + vsSegundoANum + '\'' +
+                ", vsGrupo='" + vsGrupo + '\'' +
+                ", vsGrupoSoporte='" + vsGrupoSoporte + '\'' +
+                ", vsMensajeMail='" + vsMensajeMail + '\'' +
+                '}';
+    }
 }

@@ -13,6 +13,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
+
 import org.apache.log4j.Logger;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.xssf.usermodel.XSSFCell;
@@ -28,7 +30,7 @@ public class LecturaArchivo
   {
     log.debug("RUTA: " + psRuta);
     
-    int i = 0;
+    int contador = 0;
     
     boolean vbFilaVacia = true;
     
@@ -54,45 +56,52 @@ public class LecturaArchivo
         if (fncLeerCelda(vhCelda).equals("")) {
           vbFilaVacia = false;
         }
-        voRutina.setVsCompa\u00F1ia(fncLeerCelda(vhCelda));
-        vhCelda = (XSSFCell)viFila.next();
-        System.out.println(fncLeerCelda(vhCelda));
-        voRutina.setVsRutina(fncLeerCelda(vhCelda));
-        i++;
-        if (!voRutina.getVsRutina().equals(""))
-        {
+        if (vhFila.getLastCellNum() > 1) {
+          voRutina.setVsCompañia(fncLeerCelda(vhCelda));
           vhCelda = (XSSFCell)viFila.next();
-          voRutina.setVsTipo(fncLeerCelda(vhCelda));
-          vhCelda = (XSSFCell)viFila.next();
-          voRutina.setVsFrecuencia(fncLeerCelda(vhCelda));
-          vhCelda = (XSSFCell)viFila.next();
-          voRutina.setVsDuracion(fncLeerCelda(vhCelda));
-          vhCelda = (XSSFCell)viFila.next();
-          if (vhCelda.getCellTypeEnum().toString().equals("STRING")) {
-            voRutina.setVsFechaC(fncLeerCelda(vhCelda));
-          } else {
-            voRutina.setVsFechaC(vsFormatofh.format(vhCelda.getDateCellValue()));
+          System.out.println(fncLeerCelda(vhCelda));
+          voRutina.setVsRutina(fncLeerCelda(vhCelda));
+          if (!voRutina.getVsRutina().equals(""))
+          {
+            vhCelda = (XSSFCell)viFila.next();
+            voRutina.setVsTipo(fncLeerCelda(vhCelda));
+            vhCelda = (XSSFCell)viFila.next();
+            voRutina.setVsFrecuencia(fncLeerCelda(vhCelda));
+            vhCelda = (XSSFCell)viFila.next();
+            voRutina.setVsDuracion(fncLeerCelda(vhCelda));
+            vhCelda = (XSSFCell)viFila.next();
+            if (vhCelda.getCellTypeEnum().toString().equals("STRING")) {
+              voRutina.setVsFechaC(fncLeerCelda(vhCelda));
+            } else {
+              voRutina.setVsFechaC(vsFormatofh.format(vhCelda.getDateCellValue()));
+            }
+            vhCelda = (XSSFCell)viFila.next();
+            if (vhCelda.getCellTypeEnum().toString().equals("STRING")) {
+              voRutina.setVsFechaI(fncLeerCelda(vhCelda));
+            } else {
+              voRutina.setVsFechaI(vsFormatofh.format(vhCelda.getDateCellValue()));
+            }
+            vhCelda = (XSSFCell)viFila.next();
+            voRutina.setVsCI(fncLeerCelda(vhCelda));
+            vhCelda = (XSSFCell)viFila.next();
+            voRutina.setVsRegion(fncLeerCelda(vhCelda));
+            vhCelda = (XSSFCell)viFila.next();
+            voRutina.setVsGrupoS(fncLeerCelda(vhCelda));
+            vhCelda = (XSSFCell)viFila.next();
+            voRutina.setVsResponsable(fncLeerCelda(vhCelda));
+            vhCelda = (XSSFCell)viFila.next();
+            voRutina.setVsInstrucciones(fncLeerCelda(vhCelda));
+            //vhCelda = (XSSFCell)viFila.next();
+            //voRutina.setVsNombreArchivo(fncLeerCelda(vhCelda));
+            voRutina.setVsNombreArchivo("");
+            voListRes.add(voRutina);
+            contador = 0;
           }
-          vhCelda = (XSSFCell)viFila.next();
-          if (vhCelda.getCellTypeEnum().toString().equals("STRING")) {
-            voRutina.setVsFechaI(fncLeerCelda(vhCelda));
-          } else {
-            voRutina.setVsFechaI(vsFormatofh.format(vhCelda.getDateCellValue()));
+        } else {
+          contador++;
+          if (contador > 2) { //3 oportunidades de fila vacia antes de salir
+            break;
           }
-          vhCelda = (XSSFCell)viFila.next();
-          voRutina.setVsCI(fncLeerCelda(vhCelda));
-          vhCelda = (XSSFCell)viFila.next();
-          voRutina.setVsRegion(fncLeerCelda(vhCelda));
-          vhCelda = (XSSFCell)viFila.next();
-          voRutina.setVsGrupoS(fncLeerCelda(vhCelda));
-          vhCelda = (XSSFCell)viFila.next();
-          voRutina.setVsResponsable(fncLeerCelda(vhCelda));
-          vhCelda = (XSSFCell)viFila.next();
-          voRutina.setVsInstrucciones(fncLeerCelda(vhCelda));
-          //vhCelda = (XSSFCell)viFila.next();
-          //voRutina.setVsNombreArchivo(fncLeerCelda(vhCelda));
-          voRutina.setVsNombreArchivo("");
-          voListRes.add(voRutina);
         }
       }
     }
@@ -134,7 +143,7 @@ public class LecturaArchivo
   {
     log.debug("RUTA: " + psRuta);
     
-    int i = 0;
+    int contador = 0;
     System.out.println("Ruta" + psRuta);
     
     List<AdmVO> voListRes = new ArrayList();
@@ -156,31 +165,40 @@ public class LecturaArchivo
         Iterator viFila = vhFila.cellIterator();
         if (viFila.hasNext())
         {
-          AdmVO voAdm = new AdmVO();
-          XSSFCell vhCelda = (XSSFCell)viFila.next();
-          voAdm.setVsCompania(fncLeerCelda(vhCelda));
-          vhCelda = (XSSFCell)viFila.next();
-          voAdm.setVsSistema(fncLeerCelda(vhCelda));
-          vhCelda = (XSSFCell)viFila.next();
-          voAdm.setVsNodo(fncLeerCelda(vhCelda));
-          vhCelda = (XSSFCell)viFila.next();
-          voAdm.setVsRegion(fncLeerCelda(vhCelda));
-          vhCelda = (XSSFCell)viFila.next();
-          voAdm.setVsPerfil(fncLeerCelda(vhCelda));
-          vhCelda = (XSSFCell)viFila.next();
-          voAdm.setVsPrimerANum(fncLeerCelda(vhCelda));
-          vhCelda = (XSSFCell)viFila.next();
-          voAdm.setVsSegundoANum(fncLeerCelda(vhCelda));
-          vhCelda = (XSSFCell)viFila.next();
-          voAdm.setVsGrupo(fncLeerCelda(vhCelda));
-          vhCelda = (XSSFCell)viFila.next();
-          voAdm.setVsMensajeMail(fncLeerCelda(vhCelda));
-          voListRes.add(voAdm);
+          //System.out.println("Numero de filas: " + vhFila.getLastCellNum());
+          if (vhFila.getLastCellNum() > 1) {
+            AdmVO voAdm = new AdmVO();
+            XSSFCell vhCelda = (XSSFCell)viFila.next();
+            voAdm.setVsCompania(fncLeerCelda(vhCelda).toUpperCase());
+            vhCelda = (XSSFCell)viFila.next();
+            voAdm.setVsSistema(fncLeerCelda(vhCelda).toUpperCase());
+            vhCelda = (XSSFCell)viFila.next();
+            voAdm.setVsNodo(fncLeerCelda(vhCelda).toUpperCase());
+            vhCelda = (XSSFCell)viFila.next();
+            voAdm.setVsRegion(fncLeerCelda(vhCelda).toUpperCase());
+            vhCelda = (XSSFCell)viFila.next();
+            voAdm.setVsPerfil(fncLeerCelda(vhCelda).toUpperCase());
+            vhCelda = (XSSFCell)viFila.next();
+            voAdm.setVsPrimerANum(fncLeerCelda(vhCelda).toLowerCase());
+            vhCelda = (XSSFCell)viFila.next();
+            voAdm.setVsSegundoANum(fncLeerCelda(vhCelda).toLowerCase());
+            vhCelda = (XSSFCell)viFila.next();
+            voAdm.setVsGrupo(fncLeerCelda(vhCelda).toUpperCase());
+            vhCelda = (XSSFCell)viFila.next();
+            voAdm.setVsMensajeMail(fncLeerCelda(vhCelda));
+            voListRes.add(voAdm);
+            contador = 0;
+          } else {
+            contador++;
+            if (contador > 2) { //Limite de 3 filas vacias antes de parar
+              //System.out.println("Fin del archivo");
+              break;
+            }
+          }
         }
       }
     }
-    catch (IOException e)
-    {
+    catch (IOException e) {
       log.error(e);
       System.out.println(e);
     }
@@ -253,8 +271,13 @@ public class LecturaArchivo
     
     int i = 0;
     
-    List<AdmVO> voList = voArchivo.fncLeerArchivoAdm("c:/Logs/Formato Alta de Perfiles ADM.xlsx");
-    for (AdmVO rutina : voList)
+    List<AdmVO> voList = voArchivo.fncLeerArchivoAdm("C:\\Users\\Daniel\\Desktop\\Trabajo\\Java\\CargasRControl\\Prueba\\Formato+Alta+de+Perfiles+ADM.xlsx");
+
+    for (AdmVO indexADM : voList) {
+      System.out.println(indexADM.toString());
+    }
+
+    /*for (AdmVO rutina : voList)
     {
       System.out.println(i++);
       System.out.println(rutina.getVsCompania());
@@ -268,6 +291,6 @@ public class LecturaArchivo
       System.out.println("rutina.getVsSegundoANum()" + rutina.getVsSegundoANum());
       System.out.println(rutina.getVsGrupo());
       System.out.println(rutina.getVsMensajeMail());
-    }
+    }*/
   }
 }
