@@ -57,38 +57,38 @@ public class LecturaArchivo
           vbFilaVacia = false;
         }
         if (vhFila.getLastCellNum() > 1) {
-          voRutina.setVsCompañia(fncLeerCelda(vhCelda));
+          voRutina.setVsCompañia(fncLeerCelda(vhCelda).toUpperCase());
           vhCelda = (XSSFCell)viFila.next();
           System.out.println(fncLeerCelda(vhCelda));
-          voRutina.setVsRutina(fncLeerCelda(vhCelda));
+          voRutina.setVsRutina(fncLeerCelda(vhCelda).toUpperCase());
           if (!voRutina.getVsRutina().equals(""))
           {
             vhCelda = (XSSFCell)viFila.next();
-            voRutina.setVsTipo(fncLeerCelda(vhCelda));
+            voRutina.setVsTipo(fncLeerCelda(vhCelda).toUpperCase());
             vhCelda = (XSSFCell)viFila.next();
-            voRutina.setVsFrecuencia(fncLeerCelda(vhCelda));
+            voRutina.setVsFrecuencia(fncLeerCelda(vhCelda).toUpperCase());
             vhCelda = (XSSFCell)viFila.next();
-            voRutina.setVsDuracion(fncLeerCelda(vhCelda));
+            voRutina.setVsDuracion(fncLeerCelda(vhCelda).toUpperCase());
             vhCelda = (XSSFCell)viFila.next();
             if (vhCelda.getCellTypeEnum().toString().equals("STRING")) {
-              voRutina.setVsFechaC(fncLeerCelda(vhCelda));
+              voRutina.setVsFechaC(fncLeerCelda(vhCelda).toUpperCase());
             } else {
-              voRutina.setVsFechaC(vsFormatofh.format(vhCelda.getDateCellValue()));
+              voRutina.setVsFechaC(vsFormatofh.format(vhCelda.getDateCellValue()).toUpperCase());
             }
             vhCelda = (XSSFCell)viFila.next();
             if (vhCelda.getCellTypeEnum().toString().equals("STRING")) {
-              voRutina.setVsFechaI(fncLeerCelda(vhCelda));
+              voRutina.setVsFechaI(fncLeerCelda(vhCelda).toUpperCase());
             } else {
-              voRutina.setVsFechaI(vsFormatofh.format(vhCelda.getDateCellValue()));
+              voRutina.setVsFechaI(vsFormatofh.format(vhCelda.getDateCellValue()).toUpperCase());
             }
             vhCelda = (XSSFCell)viFila.next();
-            voRutina.setVsCI(fncLeerCelda(vhCelda));
+            voRutina.setVsCI(fncLeerCelda(vhCelda).toUpperCase());
             vhCelda = (XSSFCell)viFila.next();
-            voRutina.setVsRegion(fncLeerCelda(vhCelda));
+            voRutina.setVsRegion(fncLeerCelda(vhCelda).toUpperCase());
             vhCelda = (XSSFCell)viFila.next();
-            voRutina.setVsGrupoS(fncLeerCelda(vhCelda));
+            voRutina.setVsGrupoS(fncLeerCelda(vhCelda).toUpperCase());
             vhCelda = (XSSFCell)viFila.next();
-            voRutina.setVsResponsable(fncLeerCelda(vhCelda));
+            voRutina.setVsResponsable(fncLeerCelda(vhCelda).toUpperCase());
             vhCelda = (XSSFCell)viFila.next();
             voRutina.setVsInstrucciones(fncLeerCelda(vhCelda));
             //vhCelda = (XSSFCell)viFila.next();
