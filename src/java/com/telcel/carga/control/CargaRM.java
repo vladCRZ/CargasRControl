@@ -82,7 +82,7 @@ public class CargaRM {
             if (voRemedyControl.fncDescargarArchivo(ordenTrabajoVO.getViIDRequerimiento())) {
                 //Se recupera el nombre del archivo en remedy
                 vsNomArchivo = voRemedyControl.fncRecuperarNombreArchivo(ordenTrabajoVO.getViIDRequerimiento());
-                System.out.println( "Aqui esta tu archivo: " + prop.getProperty("PATH") + vsNomArchivo);
+                System.out.println("Aqui esta tu archivo: " + prop.getProperty("PATH") + vsNomArchivo);
                 //System.out.println("paso por aqui");
                 voListRutina = VO__LECTURA.fncLeerArchivo(prop.getProperty("PATH") + vsNomArchivo);
                 if (voRemedyControl.fncInsertRutinas(voListRutina, ordenTrabajoVO.getViIDOrden())) {
@@ -93,10 +93,10 @@ public class CargaRM {
                             vsComentario += errores;
                         }
                         voRemedyControl.fncInsertComentario("OBSERVACIONES DEL SISTEMA", vsComentario, ordenTrabajoVO.getViIDOrden());
-                        voCarga.ExcCommand("mv '/home/remedy/download/RM/" + vsNomArchivo + "' '/home/remedy/archivos/" + vsNomArchivo+ "'");
+                        voCarga.ExcCommand("mv '/home/remedy/download/RM/" + vsNomArchivo + "' '/home/remedy/archivos/" + vsNomArchivo + "'");
                         voRemedyControl.fncCerrarWO(ordenTrabajoVO.getViIDOrden(), "Unsuccessful");
                     } else {
-                        voCarga.ExcCommand("mv /home/remedy/download/RM/" + vsNomArchivo + " /home/remedy/archivos/"+vsNomArchivo);
+                        voCarga.ExcCommand("mv /home/remedy/download/RM/" + vsNomArchivo + " /home/remedy/archivos/" + vsNomArchivo);
                         voRemedyControl.fncCerrarWO(ordenTrabajoVO.getViIDOrden(), "Successful");
                     }
                 } else {
@@ -116,9 +116,8 @@ public class CargaRM {
                 voRemedyControl.fncInsertComentario("OBSERVACIONES DEL SISTEMA", "No se incluyo archivo para la carga", ordenTrabajoVO.getViIDOrden());
                 voRemedyControl.fncCancelarWO(ordenTrabajoVO.getViIDOrden());
             }
-
+            vsComentario = "";
         }
-
     }
 
 }
