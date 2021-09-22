@@ -91,9 +91,9 @@ public class LecturaArchivo
             voRutina.setVsResponsable(fncLeerCelda(vhCelda).toUpperCase());
             vhCelda = (XSSFCell)viFila.next();
             voRutina.setVsInstrucciones(fncLeerCelda(vhCelda));
-            //vhCelda = (XSSFCell)viFila.next();
-            //voRutina.setVsNombreArchivo(fncLeerCelda(vhCelda));
-            voRutina.setVsNombreArchivo("");
+            vhCelda = (XSSFCell)viFila.next();
+            voRutina.setVsNombreArchivo(fncLeerCelda(vhCelda));
+            //voRutina.setVsNombreArchivo("");
             voListRes.add(voRutina);
             contador = 0;
           }
