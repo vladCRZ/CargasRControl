@@ -12,9 +12,8 @@ import com.telcel.carga.entry.OrdenTrabajoVO;
 import com.telcel.carga.entry.RutinaVO;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
+
 import org.apache.log4j.Logger;
 
 /**
@@ -58,19 +57,25 @@ public class CargaRM {
         }
     }
 
-    public String fncObtenerNomArchivo(List<RutinaVO> voListRutina) {
+    public List<String> fncObtenerNomArchivo(List<RutinaVO> voListRutina) {
         String vsNomArchivo = "";
+        List<String> listArchivos = new ArrayList<>();
+        //System.out.println("Lecura de archivos: ");
         for (RutinaVO rutinaVO : voListRutina) {
-            if (!vsNomArchivo.equals(rutinaVO.getVsNombreArchivo())) {
-                vsNomArchivo = rutinaVO.getVsNombreArchivo();
-            }
+            listArchivos.add(rutinaVO.getVsNombreArchivo());
+            //System.out.println(rutinaVO.getVsNombreArchivo() + ", ");
         }
-        return vsNomArchivo;
+        //Quita todos los duplicados
+        Set<String> set = new HashSet<>(listArchivos);
+        listArchivos.clear();
+        listArchivos.addAll(set);
+        return listArchivos;
     }
 
     public static void main(String[] args) {
         CargaRM voCarga = new CargaRM();
         String vsNomArchivo = "";
+        List<String> listArchivos;
         String vsComentario = "";
         List<OrdenTrabajoVO> voListWO = voRemedyControl.fncConsultaOrdenesT("RM");
         List<RutinaVO> voListRutina;
@@ -80,28 +85,43 @@ public class CargaRM {
             voRemedyControl.setVoErrores(new ArrayList<String>());
             voCarga.ExcCommand("rm " + prop.getProperty("PATH"));
             if (voRemedyControl.fncDescargarArchivo(ordenTrabajoVO.getViIDRequerimiento())) {
-                //Se recupera el nombre del archivo en remedy
+                //Se recupera el nombre del archivo que contiene las rutinas de remedy
                 vsNomArchivo = voRemedyControl.fncRecuperarNombreArchivo(ordenTrabajoVO.getViIDRequerimiento());
                 System.out.println("Aqui esta tu archivo: " + prop.getProperty("PATH") + vsNomArchivo);
-                //System.out.println("paso por aqui");
                 voListRutina = VO__LECTURA.fncLeerArchivo(prop.getProperty("PATH") + vsNomArchivo);
+                //Archivos que se movera
+                listArchivos = voCarga.fncObtenerNomArchivo(voListRutina);
                 if (voRemedyControl.fncInsertRutinas(voListRutina, ordenTrabajoVO.getViIDOrden())) {
-                    //vsNomArchivo = voCarga.fncObtenerNomArchivo(voListRutina);
                     if (!voRemedyControl.getVoErrores().isEmpty()) {
                         for (String errores : voRemedyControl.getVoErrores()) {
                             System.out.println(errores);
                             vsComentario += errores;
                         }
                         voRemedyControl.fncInsertComentario("OBSERVACIONES DEL SISTEMA", vsComentario, ordenTrabajoVO.getViIDOrden());
-                        voCarga.ExcCommand("mv '/home/remedy/download/RM/" + vsNomArchivo + "' '/home/remedy/archivos/" + vsNomArchivo + "'");
+                        /*System.out.println("Lista archivos: ");
+                        for (String indexMover : listArchivos) {
+                            System.out.print(indexMover + ", ");
+                        }*/
+                        for (String indexMover : listArchivos) {
+                            //System.out.println("AQUI ES DONDE SE MUEVE TODO");
+                            voCarga.ExcCommand("mv /home/remedy/download/RM/" + indexMover + " /home/remedy/archivos/" + indexMover);
+                        }
                         voRemedyControl.fncCerrarWO(ordenTrabajoVO.getViIDOrden(), "Unsuccessful");
                     } else {
-                        voCarga.ExcCommand("mv /home/remedy/download/RM/" + vsNomArchivo + " /home/remedy/archivos/" + vsNomArchivo);
+                        /*System.out.println("Lista archivos: ");
+                        for (String indexMover : listArchivos) {
+                            System.out.print(indexMover + ", ");
+                        }*/
+                        for (String indexMover : listArchivos) {
+                            //System.out.println("AQUI ES DONDE SE MUEVE TODO");
+                            voCarga.ExcCommand("mv /home/remedy/download/RM/" + indexMover + " /home/remedy/archivos/" + indexMover);
+                        }
                         voRemedyControl.fncCerrarWO(ordenTrabajoVO.getViIDOrden(), "Successful");
                     }
                 } else {
                     if (voRemedyControl.getVoErrores().isEmpty()) {
-                        voRemedyControl.fncInsertComentario("OBSERVACIONES DEL SISTEMA", "No se incluyo archivo con el nombre o formato especifico", ordenTrabajoVO.getViIDOrden());
+                        voRemedyControl.fncInsertComentario("OBSERVACIONES DEL SISTEMA",
+                                "No se incluyo archivo con el nombre o formato especifico", ordenTrabajoVO.getViIDOrden());
                     } else {
                         for (String errores : voRemedyControl.getVoErrores()) {
                             System.out.println(errores);
@@ -113,7 +133,8 @@ public class CargaRM {
                     voRemedyControl.fncCancelarWO(ordenTrabajoVO.getViIDOrden());
                 }
             } else {
-                voRemedyControl.fncInsertComentario("OBSERVACIONES DEL SISTEMA", "No se incluyo archivo para la carga", ordenTrabajoVO.getViIDOrden());
+                voRemedyControl.fncInsertComentario("OBSERVACIONES DEL SISTEMA", "No se incluyo archivo para la carga",
+                        ordenTrabajoVO.getViIDOrden());
                 voRemedyControl.fncCancelarWO(ordenTrabajoVO.getViIDOrden());
             }
             vsComentario = "";
