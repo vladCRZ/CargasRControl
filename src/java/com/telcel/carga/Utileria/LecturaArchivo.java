@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Locale;
 
 import org.apache.log4j.Logger;
+import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
@@ -163,7 +164,7 @@ public class LecturaArchivo
       {
         XSSFRow vhFila = (XSSFRow)viFilas.next();
         Iterator viFila = vhFila.cellIterator();
-        if (viFila.hasNext())
+        if (viFila.hasNext() && !isRowEmpty(vhFila))
         {
           //System.out.println("Numero de filas: " + vhFila.getLastCellNum());
           if (vhFila.getLastCellNum() > 1) {
@@ -186,15 +187,11 @@ public class LecturaArchivo
             voAdm.setVsGrupo(fncLeerCelda(vhCelda).toUpperCase());
             vhCelda = (XSSFCell)viFila.next();
             voAdm.setVsMensajeMail(fncLeerCelda(vhCelda));
+            //System.out.println(voAdm.toString());
             voListRes.add(voAdm);
-            contador = 0;
-          } else {
-            contador++;
-            if (contador > 2) { //Limite de 3 filas vacias antes de parar
-              //System.out.println("Fin del archivo");
-              break;
-            }
           }
+        } else {
+          break;
         }
       }
     }
@@ -292,5 +289,15 @@ public class LecturaArchivo
       System.out.println(rutina.getVsGrupo());
       System.out.println(rutina.getVsMensajeMail());
     }*/
+  }
+
+  public boolean isRowEmpty (XSSFRow row) {
+    for (int c = row.getFirstCellNum(); c < row.getLastCellNum(); c++) {
+      XSSFCell cell = row.getCell(c);
+      if (cell != null && cell.getCellType() != Cell.CELL_TYPE_BLANK) {
+        return false;
+      }
+    }
+    return true;
   }
 }
